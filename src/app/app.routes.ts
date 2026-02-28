@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { RegisterComponent } from './components/register/register.component';
-import { QueryComponent } from './components/query/query.component';
+import { Register } from './components/register/register';
+import { Query } from './components/query/query';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'register', pathMatch: 'full' },
-  { path: 'register', component: RegisterComponent },
-  { path: 'query', component: QueryComponent },
+  { path: 'register', component: Register },
+  { path: 'query', component: Query },
 ];

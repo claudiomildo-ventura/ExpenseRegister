@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { Expense } from '../models/expense.model';
 
 @Injectable({
@@ -6,15 +6,40 @@ import { Expense } from '../models/expense.model';
 })
 export class ExpenseService {
   private readonly STORAGE_KEY = 'id';
+  private readonly _expenses = signal<Expense[]>([]);
+
+  readonly expenses = this._expenses.asReadonly();
+
+  constructor() {
+    this.refresh();
+  }
 
   register(expense: Expense): boolean {
     const nextId = this.nextPrimaryKey();
     localStorage.setItem(this.STORAGE_KEY, String(nextId));
     localStorage.setItem(String(nextId), JSON.stringify(expense));
+    this.refresh();
     return true;
   }
 
   list(filter?: Partial<Expense>): Expense[] {
+    const all = this.loadFromStorage();
+    if (!filter || Object.keys(filter).length === 0) {
+      return all;
+    }
+    return all.filter((e) => this.matchesFilter(e, filter));
+  }
+
+  delete(id: number): void {
+    localStorage.removeItem(String(id));
+    this.refresh();
+  }
+
+  private refresh(): void {
+    this._expenses.set(this.loadFromStorage());
+  }
+
+  private loadFromStorage(): Expense[] {
     const expenses: Expense[] = [];
     const totalId = localStorage.getItem(this.STORAGE_KEY);
 
@@ -29,41 +54,19 @@ export class ExpenseService {
       if (raw) {
         const expense: Expense = JSON.parse(raw);
         expense.id = i;
-
-        if (this.matchesFilter(expense, filter)) {
-          expenses.push(expense);
-        }
+        expenses.push(expense);
       }
     }
 
     return expenses;
   }
 
-  delete(id: number): void {
-    localStorage.removeItem(String(id));
-  }
-
-  private matchesFilter(expense: Expense, filter?: Partial<Expense>): boolean {
-    if (!filter) {
-      return true;
-    }
-
-    if (filter.year && expense.year !== filter.year) {
-      return false;
-    }
-    if (filter.month && expense.month !== filter.month) {
-      return false;
-    }
-    if (filter.day && expense.day !== filter.day) {
-      return false;
-    }
-    if (filter.type && expense.type !== filter.type) {
-      return false;
-    }
-    if (filter.description && !expense.description.toLowerCase().includes(filter.description.toLowerCase())) {
-      return false;
-    }
-
+  private matchesFilter(expense: Expense, filter: Partial<Expense>): boolean {
+    if (filter.year && expense.year !== filter.year) return false;
+    if (filter.month && expense.month !== filter.month) return false;
+    if (filter.day && expense.day !== filter.day) return false;
+    if (filter.type && expense.type !== filter.type) return false;
+    if (filter.description && !expense.description.toLowerCase().includes(filter.description.toLowerCase())) return false;
     return true;
   }
 

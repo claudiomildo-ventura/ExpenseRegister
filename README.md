@@ -8,10 +8,10 @@ This application performs CRUD operations on the browser's Web Storage, allowing
 
 ## 🏗 Architecture
 
-The project follows a component-based architecture with Angular 17 standalone components:
+The project follows a component-based architecture with Angular 21 standalone components:
 
 - **Models** — TypeScript interfaces for data structures (`expense.model.ts`)
-- **Services** — Business logic and localStorage persistence (`expense.service.ts`)
+- **Services** — Business logic and localStorage persistence with signals (`expense.service.ts`)
 - **Components** — Standalone UI components for registration and querying
 - **Routing** — Angular Router with two main routes (`/register`, `/query`)
 
@@ -25,8 +25,8 @@ The project incorporates a modern stack for front-end development:
 
 ### Prerequisites
 
-- Node.js 18+
-- Angular CLI 17
+- Node.js 22+
+- Angular CLI 21
 
 ### Installation
 

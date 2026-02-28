@@ -1,0 +1,108 @@
+<div class="container">
+  <h2 class="mb-4">Consulta de Despesas</h2>
+
+  <div class="row mb-4">
+    <div class="col-md-2">
+      <select class="form-control" [ngModel]="filterYear()" (ngModelChange)="filterYear.set($event); updateDays()">
+        <option [ngValue]="null">Ano</option>
+        @for (year of years(); track year) {
+          <option [ngValue]="year">{{ year }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="col-md-2">
+      <select class="form-control" [ngModel]="filterMonth()" (ngModelChange)="filterMonth.set($event); updateDays()">
+        <option value="">Mês</option>
+        @for (month of months(); track month) {
+          <option [value]="month">{{ month }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="col-md-2">
+      <select class="form-control" [ngModel]="filterDay()" (ngModelChange)="filterDay.set($event)">
+        <option [ngValue]="null">Dia</option>
+        @for (day of days(); track day) {
+          <option [ngValue]="day">{{ day }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <select class="form-control" [ngModel]="filterType()" (ngModelChange)="filterType.set($event)">
+        <option value="">Tipo</option>
+        @for (type of types(); track type) {
+          <option [value]="type">{{ type }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-md-8">
+      <input
+        class="form-control"
+        type="text"
+        placeholder="Descrição"
+        [ngModel]="filterDescription()"
+        (ngModelChange)="filterDescription.set($event)"
+        (keyup.enter)="search()"
+      />
+    </div>
+
+    <div class="col-md-2 d-flex justify-content-end">
+      <button type="button" class="btn btn-dark" (click)="search()">
+        <i class="fas fa-search"></i> Pesquisar
+      </button>
+    </div>
+
+    <div class="col-md-2 d-flex justify-content-end">
+      <button type="button" class="btn btn-outline-secondary" (click)="clearFilters()">
+        <i class="fas fa-eraser"></i> Limpar
+      </button>
+    </div>
+  </div>
+
+  @if (expenses().length > 0) {
+    <table class="table table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th>Ano</th>
+          <th>Mês</th>
+          <th>Dia</th>
+          <th>Tipo</th>
+          <th>Descrição</th>
+          <th>Valor</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (expense of expenses(); track expense.id) {
+          <tr>
+            <td>{{ expense.year }}</td>
+            <td>{{ expense.month }}</td>
+            <td>{{ expense.day }}</td>
+            <td>{{ expense.type }}</td>
+            <td>{{ expense.description }}</td>
+            <td>{{ expense.value | currency:'BRL':'symbol':'1.2-2' }}</td>
+            <td>
+              <button class="btn btn-sm btn-danger" (click)="deleteExpense(expense.id)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+      <tfoot>
+        <tr class="table-dark">
+          <td colspan="5"><strong>Total</strong></td>
+          <td><strong>{{ totalValue() | currency:'BRL':'symbol':'1.2-2' }}</strong></td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  } @else {
+    <div class="alert alert-info">Nenhuma despesa encontrada.</div>
+  }
+</div>
