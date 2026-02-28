@@ -1,0 +1,61 @@
+<div class="container">
+  <h2 class="mb-4">Cadastro de Despesa</h2>
+
+  <div class="row mb-4">
+    <div class="col-md-2">
+      <select class="form-control" [(ngModel)]="selectedYear" (ngModelChange)="updateDays()">
+        <option [ngValue]="null" disabled>Ano</option>
+        <option *ngFor="let year of years" [ngValue]="year">{{ year }}</option>
+      </select>
+    </div>
+
+    <div class="col-md-2">
+      <select class="form-control" [(ngModel)]="selectedMonth" (ngModelChange)="updateDays()">
+        <option value="" disabled>Mês</option>
+        <option *ngFor="let month of months" [value]="month">{{ month }}</option>
+      </select>
+    </div>
+
+    <div class="col-md-2">
+      <select class="form-control" [(ngModel)]="selectedDay">
+        <option [ngValue]="null" disabled>Dia</option>
+        <option *ngFor="let day of days" [ngValue]="day">{{ day }}</option>
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <select class="form-control" [(ngModel)]="selectedType">
+        <option value="" disabled>Tipo</option>
+        <option *ngFor="let type of types" [value]="type">{{ type }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-md-8">
+      <input
+        class="form-control"
+        type="text"
+        placeholder="Descrição"
+        [(ngModel)]="description"
+        (keyup.enter)="register()"
+      />
+    </div>
+
+    <div class="col-md-2">
+      <input
+        class="form-control"
+        type="number"
+        placeholder="Valor"
+        [(ngModel)]="value"
+        (keyup.enter)="register()"
+      />
+    </div>
+
+    <div class="col-md-2 d-flex justify-content-end">
+      <button type="button" class="btn btn-dark" (click)="register()">
+        <i class="fas fa-plus"></i> Cadastrar
+      </button>
+    </div>
+  </div>
+</div>
